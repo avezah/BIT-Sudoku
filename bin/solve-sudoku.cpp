@@ -84,7 +84,7 @@ class solveSudoku
 		void writeAns()
 		{
 			string ans = "";
-			char end[2];end[0] = ' ';
+			char end[3];end[0] = ' ';end[3] = '\0';
 			for(int i = 0; i < MAX; i ++)
 			{
 				ans.append(1, get_num(bit[i][0]));
@@ -95,22 +95,18 @@ class solveSudoku
 				}
 				ans.append(1, '\n');
 			}
-			ans.append(1, '\n');
 			ansFile << ans;
 		}
 		void Solve(void)
 		{
+			readProblems();
+			DFS(0);
+			writeAns();
 			while(readProblems())
 			{
+				ansFile<<'\n';
 				DFS(0);
-				// writeAns();
-				for(int i = 0; i < MAX; i ++)
-				{
-					for(int j = 0; j < MAX; j ++)
-						cout << get_num(bit[i][j]) << " ";
-					cout << endl;
-				}
-				cout << endl;
+				writeAns();
 			}
 		}
 };
