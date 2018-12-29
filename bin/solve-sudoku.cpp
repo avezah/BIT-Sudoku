@@ -18,7 +18,7 @@ class solveSudoku
 		{
 			solveFile.open("C:\\Users\\ChenQiang\\Documents\\Code\\sudoku\\bin\\solve-problem.txt");
 			ansFile.open("C:\\Users\\ChenQiang\\Documents\\Code\\sudoku\\bin\\solve-ans.txt");
-			assert(solveFile.is_open());
+			assert(solveFile.is_open());//异常提示
 			assert(ansFile.is_open());
 		}
 		~solveSudoku()
@@ -46,7 +46,7 @@ class solveSudoku
 			bit[i][j] = 0; //这种方案下位置可行解为零
 			return false; //返回无可行解
 		}
-		char get_num(int bit)
+		char get_num(int bit)//将按位标记的数字转化为字符形式
 		{
 			char num = '0';
 			while(bit)
@@ -58,9 +58,9 @@ class solveSudoku
 		}
 		bool readProblems(void)
 		{
-			string s;
-			int cntLine = 0;
-			int cntZero = 0;
+			string s;//存放读入的行
+			int cntLine = 0;//记录行号
+			int cntZero = 0;//记录待填数字的位置
 			memset(bit, 0, sizeof(bit));
 			memset(zero, -1, sizeof(zero));
 			while(getline(solveFile, s))
@@ -68,20 +68,20 @@ class solveSudoku
 				for (int i = 0; i < 2*MAX - 1; i ++)
 				{
 					if(s[i] == '0')
-						zero[cntZero ++] = cntLine*10 + i/2;
+						zero[cntZero ++] = cntLine*10 + i/2;//读取到待填数字，用二位数的十位表示行号，个位表示列号
 					else if (s[i] <= '9' && s[i] >= '1')
-						bit[cntLine][i/2] = 1 << (s[i] - '0' - 1);
+						bit[cntLine][i/2] = 1 << (s[i] - '0' - 1);//按位标记存在的数字
 				}
 				cntLine ++;
 				if(cntLine == 9)
 				{
-					getline(solveFile, s);
+					getline(solveFile, s);//读取空行
 					return true;
 				}
 			}
 			return false;
 		}
-		void writeAns()
+		void writeAns()//写入答案
 		{
 			string ans = "";
 			char end[3];end[0] = ' ';end[3] = '\0';
@@ -99,10 +99,12 @@ class solveSudoku
 		}
 		void Solve(void)
 		{
-			readProblems();
-			DFS(0);
-			writeAns();
-			while(readProblems())
+			if(readProblems())//为了按照要求输出，先读取一个待解数独
+			{
+				DFS(0);
+				writeAns();
+			}
+			while(readProblems())//后面每个读取的数独前加空行
 			{
 				ansFile<<'\n';
 				DFS(0);
