@@ -12,7 +12,7 @@ class genSudoku
 	public:
 		ofstream outFile;
 		int *temp  = new int [MAX]; 
-		int seed[MAX][MAX] = {{1, 8, 6, 7, 3, 2, 4, 9, 5},
+		int seed[MAX][MAX] = {{1, 8, 6, 7, 3, 2, 4, 9, 5}, //初始数独
 							{3, 9, 2, 1, 4, 5, 6, 7, 8},
 							{4, 5, 7, 9, 6, 8, 2, 3, 1},
 							{2, 1, 3, 8, 9, 7, 5, 6, 4},
@@ -25,7 +25,7 @@ class genSudoku
 		{
 			start = GetTickCount();
 			need = count = 0;
-			for (int i = 0; i < 9; i ++)
+			for (int i = 0; i < 9; i ++)//初始化全排列
 				list[i] = i;
 			outFile.open("gen-sudoku.txt");
 		}
@@ -36,21 +36,21 @@ class genSudoku
 			end = GetTickCount();
 			cout << "CostTime = "<< end - start << "ms" << endl;
 		}
-		void Swap_num(int &one, int &two)
+		void Swap_num(int &one, int &two)//交换数字
 		{
 			int temp;
 			temp = one;
 			one = two;
 			two = temp;
 		}
-		void Swap_row(int a)
+		void Swap_row(int a)//轮转交换行
 		{	
 			memcpy(temp, seed[a + 2], MAX);
 			memcpy(seed[a + 2], seed[a + 1], MAX);
 			memcpy(seed[a + 1], seed[a], MAX);
 			memcpy(seed[a], temp, MAX);
 		}
-		void Swap_col(int a)
+		void Swap_col(int a)//轮转交换列
 		{
 			int temp;
 			for (int i = 0; i < MAX; i ++)
@@ -61,7 +61,7 @@ class genSudoku
 				seed[i][a] = temp;
 			}
 		}
-		void Putout()
+		void Putout()//数独写入文件
 		{
 			for (int i = 0; i < MAX; i ++)
 			{
@@ -75,7 +75,7 @@ class genSudoku
 			}
 			outFile<<endl;
 		}
-		void Display()
+		void Display()//显示数独内容
 		{
 			for (int i = 0; i < MAX; i ++)
 			{
@@ -83,13 +83,13 @@ class genSudoku
 			}
 			cout<<endl;
 		}
-		void Swap_all_num(int list[])
+		void Swap_all_num(int list[])//根据全排列序列交换数独内的所有数字
 		{
 			for(int i = 0; i < MAX; i ++) 
 				for(int j = 0; j < MAX; j ++)
 					seed[i][j] = list[seed[i][j] - 1] + 1;
 		}
-		void Swap_num_back(int list[])
+		void Swap_num_back(int list[])//撤回交换数字
 		{
 			for(int i = 0; i < MAX; i ++)
 				temp[list[i]] = i;
@@ -97,7 +97,7 @@ class genSudoku
 				for(int j = 0; j < MAX; j ++)
 					seed[i][j] = temp[seed[i][j] - 1] + 1;
 		}
-		void Swap_row_col()
+		void Swap_row_col()//宫内交换行列
 		{
 			for(int i = 1; i <= 2; i ++)
 				for(int j = 0; j < 3; j ++)
@@ -112,18 +112,18 @@ class genSudoku
 				}
 			
 		}
-		void Swap(int list[])
+		void Swap(int list[])//矩阵变换
 		{
 			Swap_all_num(list);
 			Swap_row_col();
 			Swap_num_back(list);
 			
 		}
-		void Perm(int list[], int low, int high)
+		void Perm(int list[], int low, int high)//全排列生成
 		{
 			if(low == high)
 			{
-				Swap(list);
+				Swap(list);//每生成一个全排列则进行数字交换及行列变换
 			}
 			else
 			{
@@ -141,10 +141,10 @@ class genSudoku
 			Perm(list, 1, 8);
 		}
 	private:
-		int list[MAX];
-		int count;
-		int need;
-		double start, end;
+		int list[MAX];//全排列序列
+		int count;//计数器
+		int need;//需要的数独数量
+		double start, end;//计时器
 };
 
 int main(void)
