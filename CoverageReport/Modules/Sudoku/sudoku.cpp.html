@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>sudoku.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+ï»¿// Sudoku.cpp : æ­¤æä»¶åå« "main" å½æ°ãç¨åºæ§è¡å°å¨æ­¤å¤å¼å§å¹¶ç»æã
+//
+
+#include "pch.h"
+#include "solve-sudoku.h"
+#include "gensudoku.h"
+#include &lt;math.h&gt;
+int main(int argc, char *argv[])
+<span style = "background-color:#dfd">{
+	if (argc == 1)</span>
+	{
+<span style = "background-color:#dfd">		cout &lt;&lt; "Error-Need order." &lt;&lt; endl;
+		return 0;</span>
+	}
+<span style = "background-color:#dfd">	if (strcmp(argv[1], "-c") == 0)</span>
+	{
+<span style = "background-color:#dfd">		if (argc == 2)</span>
+		{
+<span style = "background-color:#dfd">			cout &lt;&lt; "Error-No numbers!" &lt;&lt; endl;
+			return 0;</span>
+		}
+<span style = "background-color:#dfd">		for (int i = 0; argv[2][i] != '\0'; i++)
+			if (argv[2][i] &gt; '9' || argv[2][i] &lt; '0')</span>
+			{
+<span style = "background-color:#dfd">				cout &lt;&lt; "Error-Please input numbers!" &lt;&lt; endl;
+				return 0;
+			}
+		int num = argv[2][0] - '0';
+		for (int i = 1; argv[2][i] != '\0'; i++)
+			num = num * 10 + argv[2][i] - '0';
+		if (num == 0)
+			return 0;
+		genSudoku a;
+		a.Generate(num);</span>
+<span style = "background-color:#fdd">	}</span>
+<span style = "background-color:#dfd">	else if (strcmp(argv[1], "-s") == 0)</span>
+	{
+<span style = "background-color:#dfd">		if (argc == 2)</span>
+<span style = "background-color:#fdd">		{</span>
+<span style = "background-color:#dfd">			cout &lt;&lt; "Error-No address!" &lt;&lt; endl;
+			return 0;</span>
+		}
+<span style = "background-color:#dfd">		solveSudoku b(argv[2]);
+		b.Solve();
+	}
+	else cout &lt;&lt; "Unknow order!" &lt;&lt; endl;</span>
+
+<span style = "background-color:#dfd">}</span>
+
+
+// è¿è¡ç¨åº: Ctrl + F5 æè°è¯ &gt;âå¼å§æ§è¡(ä¸è°è¯)âèå
+// è°è¯ç¨åº: F5 æè°è¯ &gt;âå¼å§è°è¯âèå
+
+// å¥é¨æç¤º: 
+//   1. ä½¿ç¨è§£å³æ¹æ¡èµæºç®¡çå¨çªå£æ·»å /ç®¡çæä»¶
+//   2. ä½¿ç¨å¢éèµæºç®¡çå¨çªå£è¿æ¥å°æºä»£ç ç®¡ç
+//   3. ä½¿ç¨è¾åºçªå£æ¥ççæè¾åºåå¶ä»æ¶æ¯
+//   4. ä½¿ç¨éè¯¯åè¡¨çªå£æ¥çéè¯¯
+//   5. è½¬å°âé¡¹ç®â&gt;âæ·»å æ°é¡¹âä»¥åå»ºæ°çä»£ç æä»¶ï¼æè½¬å°âé¡¹ç®â&gt;âæ·»å ç°æé¡¹âä»¥å°ç°æä»£ç æä»¶æ·»å å°é¡¹ç®
+//   6. å°æ¥ï¼è¥è¦åæ¬¡æå¼æ­¤é¡¹ç®ï¼è¯·è½¬å°âæä»¶â&gt;âæå¼â&gt;âé¡¹ç®âå¹¶éæ© .sln æä»¶</pre>
+	</body>
+</html>

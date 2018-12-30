@@ -1,0 +1,61 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>gensudoku.h</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+#ifndef GEN_H
+#define GEN_H
+#include&lt;fstream&gt;
+#include&lt;cstdlib&gt;
+#include&lt;cstring&gt;
+#include&lt;cstdio&gt;
+#include&lt;windows.h&gt;
+#include&lt;iostream&gt;
+
+#define MAX 9
+using namespace std;
+
+class genSudoku
+{
+	public:
+		ofstream outFile;
+		int *temp;
+<span style = "background-color:#dfd">		int seed[MAX][MAX] = {{1, 8, 6, 7, 3, 2, 4, 9, 5},</span>
+							{3, 9, 2, 1, 4, 5, 6, 7, 8},
+							{4, 5, 7, 9, 6, 8, 2, 3, 1},
+							{2, 1, 3, 8, 9, 7, 5, 6, 4},
+							{6, 4, 5, 3, 2, 1, 7, 8, 9},
+							{9, 7, 8, 6, 5, 4, 1, 2, 3},
+							{8, 3, 1, 4, 7, 6, 9, 5, 2},
+							{5, 6, 9, 2, 1, 3, 8, 4, 7},
+							{7, 2, 4, 5, 8, 9, 3, 1, 6}};
+
+		genSudoku();
+		~genSudoku();
+		void Swap_num(int &amp;one, int &amp;two);//½»»»Êý×Ö
+		void Swap_row(int a);//ÂÖ×ª½»»»ÐÐ
+		void Swap_col(int a);//ÂÖ×ª½»»»ÁÐ
+		void Putout();//Êý¶ÀÐ´ÈëÎÄ¼þ
+		void Swap_all_num(int list[]);//¸ù¾ÝÈ«ÅÅÁÐÐòÁÐ½»»»Êý¶ÀÄÚµÄËùÓÐÊý×Ö
+		void Swap_num_back(int list[]);//³·»Ø½»»»Êý×Ö
+		void Swap_row_col();//¹¬ÄÚ½»»»ÐÐÁÐ
+		void Perm(int list[], int low, int high);//È«ÅÅÁÐÉú³É
+
+		void Generate(int need);
+	private:
+		int list[MAX];
+		int count;
+		int need;
+		double start, end;
+};
+
+
+#endif</pre>
+	</body>
+</html>

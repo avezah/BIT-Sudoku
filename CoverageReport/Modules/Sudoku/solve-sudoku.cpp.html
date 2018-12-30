@@ -1,0 +1,107 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>solve-sudoku.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+#include "pch.h"
+#include "solve-sudoku.h"
+#include &lt;cstring&gt;
+solveSudoku::solveSudoku(char site[])
+<span style = "background-color:#dfd">{
+	solveFile.open(site);
+	ansFile.open("solve-ans.txt");
+	assert(solveFile.is_open());//å¼å¸¸æç¤º
+	assert(ansFile.is_open());
+}</span>
+solveSudoku::~solveSudoku()
+<span style = "background-color:#dfd">{
+	solveFile.close();
+	ansFile.close();
+}</span>
+bool solveSudoku::DFS(int z) //æ·±ææ¾æ¹æ¡
+<span style = "background-color:#dfd">{
+	int i = zero[z]/10;//è·åè¡å·
+	int j = zero[z]%10;//è·ååå·
+	int possible = ((1 &lt;&lt; 9) - 1);//è®°å½è¯¥ä½ç½®å¯è½çåºç°æ°
+	for (int k = 0; k &lt; MAX; k ++)//æé¤å°è¯¥ä½ç½®æå¨çè¡åå®«ä¸­å·²æçæ°
+		possible &amp;= (~bit[i][k]) &amp; ((~bit[k][j]) &amp; (~bit[i/3*3 + k/3][j/3*3 + k%3]));</span>
+
+<span style = "background-color:#dfd">	while(possible)//ä»ç¶å­å¨å¯è½çæ¹æ¡ï¼å³possibleæªè¢«å®å¨ç½®é¶</span>
+	{
+<span style = "background-color:#dfd">		bit[i][j] = possible &amp; (-possible); //è¯¥ä½ç½®å°ç¬¬ä¸ä¸ªå¯è½åºç°çæ°å¡«å¥ï¼ä½ä¸ºä¸ä¸ªå¯è½çæ¹æ¡
+		possible &amp;= ~bit[i][j]; //ä»è®°å½ä¸­ç§»é¤å·²ç»ç¨è¿çæ°
+		if(zero[z + 1] != -1 &amp;&amp; !DFS(z + 1))
+			continue; //å¦æå¾å¡«ç©ºæ ¼çåæ æ²¡æç»æä¸è¯¥æ¹æ¡éè¯¯ï¼å°è¯ä¸ä¸ä¸ªæ¹æ¡</span>
+<span style = "background-color:#fdd">		else</span>
+<span style = "background-color:#dfd">			return true; //æ¾å®æåä¸ä¸ªå¾å¡«ä½ç½®æ¶ï¼ä»æå¯è¡çæ¾æ¡ï¼è¿åå­å¨è§£</span>
+<span style = "background-color:#fdd">	}</span>
+<span style = "background-color:#dfd">	bit[i][j] = 0; //è¿ç§æ¹æ¡ä¸ä½ç½®å¯è¡è§£ä¸ºé¶
+	return false; //è¿åæ å¯è¡è§£
+}</span>
+char solveSudoku::get_num(int bit)//å°æä½æ è®°çæ°å­è½¬åä¸ºå­ç¬¦å½¢å¼
+<span style = "background-color:#dfd">{
+	char num = '0';
+	while(bit)</span>
+	{
+<span style = "background-color:#dfd">		num ++;
+		bit = bit &gt;&gt; 1;
+	}
+	return num;
+}</span>
+bool solveSudoku::readProblems(void)
+<span style = "background-color:#dfd">{
+	string s;//å­æ¾è¯»å¥çè¡
+	int cntLine = 0;//è®°å½è¡å·
+	int cntZero = 0;//è®°å½å¾å¡«æ°å­çä½ç½®
+	memset(bit, 0, sizeof(bit));
+	memset(zero, -1, sizeof(zero));
+	while(getline(solveFile, s))</span>
+	{
+<span style = "background-color:#dfd">		for (int i = 0; i &lt; 2*MAX - 1; i ++)</span>
+		{
+<span style = "background-color:#dfd">			if(s[i] == '0')
+				zero[cntZero ++] = cntLine*10 + i/2;//è¯»åå°å¾å¡«æ°å­ï¼ç¨äºä½æ°çåä½è¡¨ç¤ºè¡å·ï¼ä¸ªä½è¡¨ç¤ºåå·
+			else if (s[i] &lt;= '9' &amp;&amp; s[i] &gt;= '1')
+				bit[cntLine][i/2] = 1 &lt;&lt; (s[i] - '0' - 1);//æä½æ è®°å­å¨çæ°å­
+		}
+		cntLine ++;
+		if(cntLine == 9)</span>
+		{
+<span style = "background-color:#dfd">			getline(solveFile, s);//è¯»åç©ºè¡
+			return true;</span>
+		}
+<span style = "background-color:#dfd">	}
+	return false;
+}</span>
+void solveSudoku::writeAns()//åå¥ç­æ¡
+<span style = "background-color:#dfd">{</span>
+	char ans[MAX];
+<span style = "background-color:#dfd">	for(int i = 0; i &lt; MAX; i ++)</span>
+	{
+<span style = "background-color:#dfd">		for(int j = 0; j &lt; MAX; j ++)
+			ans[j] = get_num(bit[i][j]);
+		ansFile&lt;&lt;ans[0]&lt;&lt;' '&lt;&lt;ans[1]&lt;&lt;' '&lt;&lt;ans[2]&lt;&lt;' '&lt;&lt;ans[3]&lt;&lt;' '&lt;&lt;ans[4]&lt;&lt;' '&lt;&lt;ans[5]&lt;&lt;' '&lt;&lt;ans[6]&lt;&lt;' '&lt;&lt;ans[7]&lt;&lt;' '&lt;&lt;ans[8]&lt;&lt;endl;
+	}
+}</span>
+void solveSudoku::Solve(void)
+<span style = "background-color:#dfd">{
+	if(readProblems())//ä¸ºäºæç§è¦æ±è¾åºï¼åè¯»åä¸ä¸ªå¾è§£æ°ç¬</span>
+	{
+<span style = "background-color:#dfd">		DFS(0);
+		writeAns();</span>
+	}
+<span style = "background-color:#dfd">	while(readProblems())//åé¢æ¯ä¸ªè¯»åçæ°ç¬åå ç©ºè¡</span>
+	{
+<span style = "background-color:#dfd">		ansFile&lt;&lt;'\n';
+		DFS(0);
+		writeAns();
+	}
+}</span></pre>
+	</body>
+</html>

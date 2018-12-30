@@ -1,0 +1,135 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>gensudoku.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+#include "pch.h"
+#include "gensudoku.h"
+#include &lt;cstdio&gt;
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;fstream&gt;
+#include &lt;windows.h&gt;
+#include &lt;Windows.h&gt;
+
+using namespace std;
+
+genSudoku::genSudoku()
+<span style = "background-color:#dfd">{
+	start = GetTickCount();
+	temp  = new int [MAX];
+	need = count = 0;
+	for (int i = 0; i &lt; 9; i ++)
+	list[i] = i;
+	outFile.open("gen-sudoku.txt");
+}</span>
+genSudoku::~genSudoku()
+<span style = "background-color:#dfd">{
+	delete[] temp;
+	outFile.close();
+	end = GetTickCount();
+	cout &lt;&lt; "CostTime = "&lt;&lt; end - start &lt;&lt; "ms" &lt;&lt; endl;
+}</span>
+void genSudoku::Swap_num(int &amp;one, int &amp;two)
+<span style = "background-color:#dfd">{</span>
+	int temp;
+<span style = "background-color:#dfd">	temp = one;
+	one = two;
+	two = temp;
+}</span>
+void genSudoku::Swap_row(int a)//è½®è½¬äº¤æ¢è¡
+<span style = "background-color:#dfd">{
+	memcpy(temp, seed[a + 2], MAX);
+	memcpy(seed[a + 2], seed[a + 1], MAX);
+	memcpy(seed[a + 1], seed[a], MAX);
+	memcpy(seed[a], temp, MAX);
+}</span>
+void genSudoku::Swap_col(int a)//è½®è½¬äº¤æ¢å
+<span style = "background-color:#dfd">{</span>
+	int temp;
+<span style = "background-color:#dfd">	for (int i = 0; i &lt; MAX; i ++)</span>
+	{
+<span style = "background-color:#dfd">		temp = seed[i][a + 2];
+		seed[i][a + 2] = seed[i][a + 1];
+		seed[i][a + 1] = seed[i][a];
+		seed[i][a] = temp;
+	}
+}</span>
+void genSudoku::Putout()//æ°ç¬åå¥æä»¶
+<span style = "background-color:#dfd">{
+	for (int i = 0; i &lt; MAX; i ++)</span>
+	{
+<span style = "background-color:#dfd">		outFile&lt;&lt;seed[i][0]&lt;&lt;' '&lt;&lt;seed[i][1]&lt;&lt;' '&lt;&lt;seed[i][2]&lt;&lt;' '&lt;&lt;seed[i][3]&lt;&lt;' '&lt;&lt;seed[i][4]&lt;&lt;' '&lt;&lt;seed[i][5]&lt;&lt;' '&lt;&lt;seed[i][6]&lt;&lt;' '&lt;&lt;seed[i][7]&lt;&lt;' '&lt;&lt;seed[i][8]&lt;&lt;endl;
+	}
+	count ++;
+	if(count == need)</span>
+	{
+<span style = "background-color:#dfd">		this-&gt;~genSudoku();
+		exit(0);</span>
+	}
+<span style = "background-color:#dfd">	outFile&lt;&lt;endl;</span>
+
+<span style = "background-color:#dfd">}</span>
+void genSudoku::Swap_all_num(int list[])//æ ¹æ®å¨æååºåäº¤æ¢æ°ç¬åçæææ°å­
+<span style = "background-color:#dfd">{
+	for(int i = 0; i &lt; MAX; i ++)
+		for(int j = 0; j &lt; MAX; j ++)
+			seed[i][j] = list[seed[i][j] - 1] + 1;
+}</span>
+<span style = "background-color:#fdd">void genSudoku::Swap_num_back(int list[])//æ¤åäº¤æ¢æ°å­</span>
+<span style = "background-color:#dfd">{
+	for(int i = 0; i &lt; MAX; i ++)
+		temp[list[i]] = i;
+	for(int i = 0; i &lt; MAX; i ++)
+		for(int j = 0; j &lt; MAX; j ++)
+			seed[i][j] = temp[seed[i][j] - 1] + 1;
+}</span>
+void genSudoku::Swap_row_col(void)//å®«åäº¤æ¢è¡å
+<span style = "background-color:#dfd">{
+	for(int i = 1; i &lt;= 2; i ++)
+		for(int j = 0; j &lt; 3; j ++)</span>
+<span style = "background-color:#fdd">		{</span>
+<span style = "background-color:#dfd">			Swap_row(i*3);
+			for(int a = 1; a &lt;= 2; a ++)
+				for(int b = 0; b &lt; 3; b ++)</span>
+				{
+<span style = "background-color:#dfd">					Swap_col(a*3);
+					Putout();
+					
+				}
+		}
+
+}</span>
+void genSudoku::Perm(int list[], int low, int high)//å¨æåçæ
+<span style = "background-color:#dfd">{
+	if(low == high)</span>
+	{
+<span style = "background-color:#dfd">		Swap_all_num(list);
+		Swap_row_col();
+		Swap_num_back(list);</span>
+<span style = "background-color:#fdd">	}</span>
+<span style = "background-color:#dfd">	else
+	{
+		for (int i = low; i &lt;= high; i++)</span>
+		{
+<span style = "background-color:#dfd">			Swap_num(list[i], list[low]);
+			Perm(list, low + 1, high);
+			Swap_num(list[i], list[low]);
+		}</span>
+<span style = "background-color:#fdd">	}</span>
+<span style = "background-color:#dfd">}
+void genSudoku::Generate(int need)
+{
+	this-&gt;need = need;
+	Perm(list, 1, 8);</span>
+<span style = "background-color:#fdd">}
+</span>
+</pre>
+	</body>
+</html>
